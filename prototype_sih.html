@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMART PAATHSHAALA Academic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .phone-container {
+            width: 375px;
+            height: 667px;
+            background-color: #000;
+            border-radius: 40px;
+            padding: 10px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .phone-bezel {
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            border-radius: 30px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .phone-notch {
+            width: 120px;
+            height: 25px;
+            background: #000;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            transition: transform 0.2s ease-in-out;
+        }
+        .section-content {
+            display: none;
+            margin-top: 1.5rem;
+        }
+        .section-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Phone Mockup Container -->
+    <div class="phone-container">
+        <div class="phone-bezel">
+            <div class="phone-notch"></div>
+            
+            <!-- Main App Content -->
+            <div class="flex-grow p-4 space-y-6 overflow-y-auto">
+                
+                <!-- Header -->
+                <header class="text-center pt-8">
+                    <h1 class="text-2xl font-bold text-blue-600 mb-1">SMART PAATHSHALA</h1>
+                    <p class="text-gray-600 text-sm">Turning weak signals into strong futures</p>
+                </header>
+
+                <!-- Login View -->
+                <div id="login-view" class="flex flex-col items-center justify-center pt-8">
+                    <div class="w-full p-6 card rounded-lg shadow-md border-t-4 border-blue-500 text-center">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Choose Your Role</h2>
+                        <button id="teacher-login-btn" class="mt-4 w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 transition-colors duration-200 ease-in-out font-semibold mb-2">Teacher Login</button>
+                        <button id="student-login-btn" class="w-full bg-teal-500 text-white py-3 px-4 rounded-md hover:bg-teal-600 transition-colors duration-200 ease-in-out font-semibold">Student Login</button>
+                    </div>
+                </div>
+
+                <!-- Teacher Dashboard View -->
+                <div id="teacher-dashboard-view" class="hidden">
+                    <header class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                        <h1 class="text-xl font-bold text-blue-600">Teacher Dashboard</h1>
+                        <button id="logout-btn-teacher" class="text-xs bg-gray-200 text-gray-700 py-1.5 px-3 rounded-full hover:bg-gray-300 transition-colors">Logout</button>
+                    </header>
+                    
+                    <div class="p-4 card rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-lg font-bold text-gray-800 mb-3">My Courses</h2>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="course-card card p-4 rounded-lg text-center cursor-pointer" data-course-id="physics">
+                                <svg class="h-8 w-8 mx-auto text-blue-500 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 01.78.375l3 3a1 1 0 01.376.78V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2h4z"></path></svg>
+                                <h3 class="text-base font-semibold text-gray-700">Engineering Physics</h3>
+                                <p class="text-gray-500 text-xs mt-0.5">End-Sem Exams</p>
+                            </div>
+                            <div class="course-card card p-4 rounded-lg text-center cursor-pointer" data-course-id="math">
+                                 <svg class="h-8 w-8 mx-auto text-green-500 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 01.78.375l3 3a1 1 0 01.376.78V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2h4z"></path></svg>
+                                <h3 class="text-base font-semibold text-gray-700">Mathematics I</h3>
+                                <p class="text-gray-500 text-xs mt-0.5">First Mid-Sems</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Upload Modal (hidden by default) -->
+                    <div id="upload-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center">
+                        <div class="bg-white p-5 rounded-lg shadow-xl max-w-sm w-full mx-4 text-center space-y-3">
+                            <h3 class="text-lg font-semibold text-gray-800">Mock Upload</h3>
+                            <p class="text-xs text-gray-600">Simulating upload to <span id="modal-course-name" class="font-bold"></span></p>
+                            <input type="text" id="upload-title-input" placeholder="Enter content title..." class="w-full rounded-md border-gray-300 shadow-sm p-2 text-sm">
+                            <button id="confirm-upload-btn" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors font-semibold text-sm">Upload</button>
+                            <button id="cancel-upload-btn" class="w-full bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors font-semibold text-sm">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Student Dashboard View -->
+                <div id="student-dashboard-view" class="hidden">
+                    <header class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                        <h1 class="text-xl font-bold text-teal-600">My Subjects</h1>
+                        <button id="logout-btn-student" class="text-xs bg-gray-200 text-gray-700 py-1.5 px-3 rounded-full hover:bg-gray-300 transition-colors">Logout</button>
+                    </header>
+                    <div class="p-4 card rounded-lg shadow-md border-t-4 border-teal-500">
+                        <h2 class="text-lg font-bold text-gray-800 mb-3">Available Courses</h2>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="subject-card card p-4 rounded-lg text-center cursor-pointer" data-course-id="physics">
+                                <h3 class="text-base font-semibold text-gray-700">Engineering Physics</h3>
+                                <p class="text-gray-500 text-xs mt-0.5">End-Sem Exams</p>
+                            </div>
+                            <div class="subject-card card p-4 rounded-lg text-center cursor-pointer" data-course-id="math">
+                                <h3 class="text-base font-semibold text-gray-700">Mathematics I</h3>
+                                <p class="text-gray-500 text-xs mt-0.5">First Mid-Sems</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject View -->
+                <div id="subject-view" class="hidden">
+                    <header class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                        <button id="back-to-subjects-btn" class="text-xs bg-gray-200 text-gray-700 py-1.5 px-3 rounded-full hover:bg-gray-300 transition-colors">Back</button>
+                        <h1 id="subject-title" class="text-xl font-bold text-teal-600"></h1>
+                    </header>
+                    <div class="p-4 card rounded-lg shadow-md border-t-4 border-teal-500">
+                        <h2 class="text-lg font-bold text-gray-800 mb-3">Resources</h2>
+                        <div class="grid grid-cols-1 gap-4">
+                            <button class="resource-btn w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 transition-colors duration-200 ease-in-out font-semibold mb-2" data-target="syllabus-content">View Syllabus</button>
+                            <button class="resource-btn w-full text-white py-3 px-4 rounded-md font-semibold mb-2" data-target="study-material-content" style="background-color: #5d5c61; hover:background-color: #4a494d">Study Material</button>
+                            <button class="resource-btn w-full text-white py-3 px-4 rounded-md font-semibold mb-2" data-target="pyq-content" style="background-color: #739072; hover:background-color: #617960">PYQs</button>
+                            <button class="resource-btn w-full bg-purple-500 text-white py-3 px-4 rounded-md hover:bg-purple-600 transition-colors duration-200 ease-in-out font-semibold" data-target="quiz-view">Take Mock Quiz</button>
+                        </div>
+                    </div>
+                    
+                    <div id="syllabus-content" class="section-content">
+                        <div class="p-4 card rounded-lg shadow-md border-t-4 border-blue-500">
+                            <h2 class="text-lg font-bold text-gray-800 mb-3">Syllabus</h2>
+                            <div id="syllabus-list" class="space-y-4">
+                                <!-- Dynamic content will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="study-material-content" class="section-content">
+                        <div class="p-4 card rounded-lg shadow-md border-t-4 border-green-500">
+                            <h2 class="text-lg font-bold text-gray-800 mb-3">Study Material</h2>
+                            <div id="study-list" class="space-y-4">
+                                <!-- Dynamic content for study materials -->
+                                <div class="p-4 card rounded-lg shadow-sm border-l-4 border-green-500">
+                                    <h3 class="text-base font-semibold text-gray-700">Lecture 1: Quantum Physics</h3>
+                                    <p class="text-gray-500 text-sm mt-1">PPT slides on the basics of quantum mechanics.</p>
+                                    <button class="download-btn bg-gray-200 text-gray-700 py-1 px-2 text-xs rounded-full hover:bg-gray-300 transition-colors mt-2" data-url="https://example.com/quantum.pdf">Download PPT</button>
+                                </div>
+                                <div class="p-4 card rounded-lg shadow-sm border-l-4 border-green-500">
+                                    <h3 class="text-base font-semibold text-gray-700">Audio Lecture: Newton's Laws</h3>
+                                    <p class="text-gray-500 text-sm mt-1">Professor's recorded lecture on classical mechanics.</p>
+                                    <button class="download-btn bg-gray-200 text-gray-700 py-1 px-2 text-xs rounded-full hover:bg-gray-300 transition-colors mt-2" data-url="https://example.com/newton.mp3">Download Audio</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="pyq-content" class="section-content">
+                        <div class="p-4 card rounded-lg shadow-md border-t-4 border-orange-500">
+                            <h2 class="text-lg font-bold text-gray-800 mb-3">Previous Year Papers</h2>
+                            <div id="pyq-list" class="space-y-4">
+                                <!-- Dynamic content for PYQs -->
+                                <div class="p-4 card rounded-lg shadow-sm border-l-4 border-orange-500">
+                                    <h3 class="text-base font-semibold text-gray-700">End-Sem 2023 Paper</h3>
+                                    <p class="text-gray-500 text-sm mt-1">PDF of the previous year's end-semester exam.</p>
+                                    <button class="download-btn bg-gray-200 text-gray-700 py-1 px-2 text-xs rounded-full hover:bg-gray-300 transition-colors mt-2" data-url="https://example.com/endsem2023.pdf">Download PDF</button>
+                                </div>
+                                <div class="p-4 card rounded-lg shadow-sm border-l-4 border-orange-500">
+                                    <h3 class="text-base font-semibold text-gray-700">Mid-Sem 2024 Paper</h3>
+                                    <p class="text-gray-500 text-sm mt-1">Practice paper for the upcoming mid-semester exams.</p>
+                                    <button class="download-btn bg-gray-200 text-gray-700 py-1 px-2 text-xs rounded-full hover:bg-gray-300 transition-colors mt-2" data-url="https://example.com/midsem2024.pdf">Download PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz View -->
+                <div id="quiz-view" class="hidden">
+                    <header class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                        <h1 class="text-xl font-bold text-purple-600">Mock Quiz</h1>
+                        <span id="quiz-timer" class="text-sm font-semibold text-gray-600">Time: 60s</span>
+                    </header>
+                    
+                    <div id="quiz-content" class="space-y-4">
+                        <div class="bg-gray-100 p-4 rounded-lg shadow-sm border-l-4 border-gray-300">
+                            <h3 id="question-text" class="text-lg font-semibold text-gray-800 mb-2"></h3>
+                        </div>
+                        <div id="options-container" class="space-y-3">
+                            <!-- Options will be dynamically rendered here -->
+                        </div>
+                        <button id="submit-quiz-btn" class="w-full bg-purple-500 text-white py-3 px-4 rounded-md hover:bg-purple-600 transition-colors duration-200 ease-in-out font-semibold">Submit Answer</button>
+                        <button id="go-back-from-quiz-btn" class="w-full bg-gray-300 text-gray-700 py-3 px-4 rounded-md hover:bg-gray-400 transition-colors duration-200 ease-in-out font-semibold">Go Back</button>
+                    </div>
+
+                    <!-- Quiz Result Modal (hidden by default) -->
+                    <div id="quiz-result-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center">
+                        <div class="bg-white p-5 rounded-lg shadow-xl max-w-sm w-full mx-4 text-center space-y-3">
+                            <h3 id="result-title" class="text-lg font-semibold text-gray-800"></h3>
+                            <p id="result-message" class="text-sm text-gray-600"></p>
+                            <button id="result-ok-btn" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors font-semibold text-sm">OK</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Modal for Alerts -->
+                <div id="custom-alert" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center">
+                    <div class="bg-white p-5 rounded-lg shadow-xl max-w-sm w-full mx-4 text-center space-y-3">
+                        <h3 id="alert-title" class="text-lg font-semibold text-gray-800"></h3>
+                        <p id="alert-message" class="text-sm text-gray-600"></p>
+                        <button id="alert-ok-btn" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors font-semibold text-sm">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, query, addDoc, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Configuration and Initialization ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app, db, auth;
+        let userId = null;
+        let isAuthReady = false;
+
+        // Custom alert function
+        function customAlert(title, message) {
+            const modal = document.getElementById('custom-alert');
+            document.getElementById('alert-title').textContent = title;
+            document.getElementById('alert-message').textContent = message;
+            modal.classList.remove('hidden');
+        }
+
+        document.getElementById('alert-ok-btn').addEventListener('click', () => {
+            document.getElementById('custom-alert').classList.add('hidden');
+        });
+
+        // Initialize Firebase
+        try {
+            if (Object.keys(firebaseConfig).length > 0) {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        isAuthReady = true;
+                    } else {
+                        if (initialAuthToken) {
+                            await signInWithCustomToken(auth, initialAuthToken).catch(error => {
+                                console.error("Error signing in with custom token:", error);
+                                signInAnonymously(auth);
+                            });
+                        } else {
+                            signInAnonymously(auth);
+                        }
+                    }
+                });
+            } else {
+                 customAlert('Configuration Error', 'Firebase configuration is missing. Please ensure __firebase_config is set.');
+            }
+        } catch (e) {
+            console.error("Firebase initialization failed:", e);
+             customAlert('Error', 'Failed to initialize Firebase. Check console for details.');
+        }
+        
+        // --- View Management ---
+        const loginView = document.getElementById('login-view');
+        const teacherDashboardView = document.getElementById('teacher-dashboard-view');
+        const studentDashboardView = document.getElementById('student-dashboard-view');
+        const subjectView = document.getElementById('subject-view');
+        const quizView = document.getElementById('quiz-view');
+        const uploadModal = document.getElementById('upload-modal');
+        const quizResultModal = document.getElementById('quiz-result-modal');
+        
+        const resourceButtons = document.querySelectorAll('.resource-btn');
+        const sections = document.querySelectorAll('.section-content');
+
+        function showView(view) {
+            loginView.classList.add('hidden');
+            teacherDashboardView.classList.add('hidden');
+            studentDashboardView.classList.add('hidden');
+            subjectView.classList.add('hidden');
+            quizView.classList.add('hidden');
+
+            if (view === 'login') {
+                loginView.classList.remove('hidden');
+            } else if (view === 'teacher') {
+                teacherDashboardView.classList.remove('hidden');
+            } else if (view === 'student') {
+                studentDashboardView.classList.remove('hidden');
+            } else if (view === 'subject') {
+                subjectView.classList.remove('hidden');
+                sections.forEach(s => s.classList.remove('active')); // Hide all sections
+            } else if (view === 'quiz') {
+                quizView.classList.remove('hidden');
+            }
+        }
+        
+        resourceButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.dataset.target;
+                if (targetId === 'quiz-view') {
+                    startQuiz();
+                } else {
+                    sections.forEach(s => s.classList.remove('active'));
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                }
+            });
+        });
+
+        // --- Teacher Dashboard Logic ---
+        const teacherLoginBtn = document.getElementById('teacher-login-btn');
+        const studentLoginBtn = document.getElementById('student-login-btn');
+        const logoutTeacherBtn = document.getElementById('logout-btn-teacher');
+        const logoutStudentBtn = document.getElementById('logout-btn-student');
+        const courseCards = document.querySelectorAll('.course-card');
+        const confirmUploadBtn = document.getElementById('confirm-upload-btn');
+        const cancelUploadBtn = document.getElementById('cancel-upload-btn');
+        const modalCourseName = document.getElementById('modal-course-name');
+        const uploadTitleInput = document.getElementById('upload-title-input');
+
+        let selectedCourseId = '';
+
+        teacherLoginBtn.addEventListener('click', () => showView('teacher'));
+        studentLoginBtn.addEventListener('click', () => showView('student'));
+        logoutTeacherBtn.addEventListener('click', () => showView('login'));
+        logoutStudentBtn.addEventListener('click', () => showView('login'));
+
+        courseCards.forEach(card => {
+            card.addEventListener('click', () => {
+                selectedCourseId = card.dataset.courseId;
+                modalCourseName.textContent = card.querySelector('h3').textContent;
+                uploadModal.classList.remove('hidden');
+            });
+        });
+
+        confirmUploadBtn.addEventListener('click', async () => {
+            if (!isAuthReady || !userId) {
+                customAlert('Error', 'Not authenticated. Please check connection.');
+                return;
+            }
+            const uploadTitle = uploadTitleInput.value.trim();
+            if (!uploadTitle) {
+                customAlert('Missing Info', 'Please provide a title for the content.');
+                return;
+            }
+            
+            try {
+                const docRef = doc(db, `/artifacts/${appId}/public/data/courses/${selectedCourseId}`);
+                await setDoc(docRef, {
+                    last_updated: serverTimestamp(),
+                    content: {
+                        title: uploadTitle,
+                        timestamp: serverTimestamp(),
+                        teacherId: userId
+                    }
+                }, { merge: true });
+                
+                customAlert('Success', `"${uploadTitle}" has been uploaded.`);
+                uploadModal.classList.add('hidden');
+                uploadTitleInput.value = '';
+
+            } catch (e) {
+                console.error("Error uploading content:", e);
+                customAlert('Error', 'Failed to upload content. Please try again.');
+            }
+        });
+
+        cancelUploadBtn.addEventListener('click', () => {
+            uploadModal.classList.add('hidden');
+            uploadTitleInput.value = '';
+        });
+
+        // --- Student Dashboard & Quiz Logic ---
+        const subjectCards = document.querySelectorAll('.subject-card');
+        const subjectTitleEl = document.getElementById('subject-title');
+        const syllabusListEl = document.getElementById('syllabus-list');
+        const backToSubjectsBtn = document.getElementById('back-to-subjects-btn');
+        const goBackFromQuizBtn = document.getElementById('go-back-from-quiz-btn');
+
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const submitQuizBtn = document.getElementById('submit-quiz-btn');
+        const quizTimerEl = document.getElementById('quiz-timer');
+        const downloadButtons = document.querySelectorAll('.download-btn');
+
+        let timerInterval;
+
+        const quizData = {
+            question: "Which of these devices operates based on the principle of electromagnetic induction?",
+            options: [
+                { text: "Electric motor", isCorrect: false },
+                { text: "Transformer", isCorrect: true },
+                { text: "Light bulb", isCorrect: false },
+                { text: "Resistor", isCorrect: false }
+            ]
+        };
+        
+        subjectCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const courseId = card.dataset.courseId;
+                const courseName = card.querySelector('h3').textContent;
+                subjectTitleEl.textContent = courseName;
+                selectedCourseId = courseId;
+                showView('subject');
+                setupStudentListener(selectedCourseId);
+            });
+        });
+
+        backToSubjectsBtn.addEventListener('click', () => showView('student'));
+        goBackFromQuizBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            showView('subject');
+        });
+
+        submitQuizBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            const selectedOption = document.querySelector('input[name="quiz-option"]:checked');
+            if (selectedOption) {
+                const isCorrect = selectedOption.dataset.correct === 'true';
+                if (isCorrect) {
+                    showResultModal('Correct!', 'Great job! You answered correctly.');
+                } else {
+                    showResultModal('Incorrect', 'That is not the correct answer. Try again next time!');
+                }
+            } else {
+                showResultModal('No Answer', 'You did not select an answer.');
+            }
+        });
+
+        function startQuiz() {
+            showView('quiz');
+            renderQuiz();
+            startTimer(60);
+        }
+
+        function renderQuiz() {
+            questionTextEl.textContent = quizData.question;
+            optionsContainer.innerHTML = '';
+            quizData.options.forEach((option, index) => {
+                const optionHtml = `
+                    <label class="block cursor-pointer bg-gray-100 p-3 rounded-lg hover:bg-gray-200 transition-colors">
+                        <input type="radio" name="quiz-option" class="mr-2" data-correct="${option.isCorrect}">
+                        <span class="text-sm font-medium text-gray-700">${option.text}</span>
+                    </label>
+                `;
+                optionsContainer.innerHTML += optionHtml;
+            });
+            submitQuizBtn.disabled = false;
+        }
+
+        function startTimer(seconds) {
+            let timeLeft = seconds;
+            quizTimerEl.textContent = `Time: ${timeLeft}s`;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                quizTimerEl.textContent = `Time: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitQuizBtn.disabled = true;
+                    showResultModal('Time Up!', 'Your time has run out. Better luck next time.');
+                }
+            }, 1000);
+        }
+
+        function showResultModal(title, message) {
+            document.getElementById('result-title').textContent = title;
+            document.getElementById('result-message').textContent = message;
+            quizResultModal.classList.remove('hidden');
+        }
+
+        document.getElementById('result-ok-btn').addEventListener('click', () => {
+            quizResultModal.classList.add('hidden');
+            showView('subject');
+        });
+
+        // --- Content Listeners ---
+        function setupStudentListener(courseId) {
+            if (!isAuthReady) return;
+            
+            const docRef = doc(db, `/artifacts/${appId}/public/data/courses/${courseId}`);
+            
+            onSnapshot(docRef, (doc) => {
+                if (doc.exists()) {
+                    const data = doc.data();
+                    renderSyllabusItem(data.content);
+                }
+            }, (error) => {
+                console.error("Error listening to content:", error);
+            });
+        }
+        
+        function renderSyllabusItem(content) {
+            syllabusListEl.innerHTML = ''; // Clear previous content
+            const item = document.createElement('div');
+            item.className = `p-4 card rounded-lg shadow-sm border-l-4 border-blue-500`;
+            const date = content.timestamp ? new Date(content.timestamp.seconds * 1000).toLocaleDateString() : 'N/A';
+            item.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-semibold text-gray-700">Course Content</h3>
+                    <button class="download-btn bg-gray-200 text-gray-700 py-1 px-2 text-xs rounded-full hover:bg-gray-300 transition-colors">Download</button>
+                </div>
+                <p class="text-gray-500 text-sm mt-1">${content.title}</p>
+                <p class="text-xs text-gray-400 mt-1">Uploaded: ${date}</p>
+            `;
+            item.querySelector('.download-btn').addEventListener('click', () => {
+                // Open a new, simple window to simulate a file view.
+                window.open('data:text/html;charset=utf-8,' + encodeURI('<html><head><title>Document View</title></head><body class="bg-gray-100 flex items-center justify-center h-screen"><div class="text-center p-6 bg-white rounded-lg shadow-md"><h1 class="text-2xl font-bold mb-2">Document Preview</h1><p class="text-gray-600">This is a mockup of your document. For the live app, this will be the file content.</p><p class="mt-4 text-sm text-gray-500">File: ' + content.title + '</p></div></body></html>'), '_blank');
+            });
+            syllabusListEl.appendChild(item);
+        }
+
+        // Add event listeners for the download buttons to open a new window
+        document.addEventListener('click', (event) => {
+            if (event.target.classList.contains('download-btn')) {
+                const url = event.target.dataset.url;
+                if (url) {
+                    window.open(url, '_blank');
+                }
+            }
+        });
+
+        // Initial state
+        showView('login');
+    </script>
+</body>
+</html>
